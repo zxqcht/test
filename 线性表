@@ -1,0 +1,28 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define MaxSize 60
+#define ElemType int
+
+typedef struct{
+	ElemType data[MaxSize];
+	int length;
+}SqList;
+
+void CreateList_Sq(SqList *&L,ElemType a[],int n){
+	int i;
+	L=(SqList *)malloc(sizeof(SqList));
+	for(i=0;i<n;i++){
+		L->data[i]=a[i];
+	}
+	L->length=n;
+} 
+int main(){
+	SqList *L;
+	int i;
+	ElemType a[]={1,2,3,4,5};
+	CreateList_Sq(L,a,sizeof(a)/sizeof(int));
+	for(i=0;i<5;i++){
+		printf("%d\n",L->data[i]);
+	} 
+	return 0;
+}
