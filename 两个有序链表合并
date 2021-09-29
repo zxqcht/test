@@ -1,0 +1,61 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+typedef struct node{
+	int data;
+	struct node *next;
+}node;
+node* crealist(node *L){
+	struct node *head,*p,*q,*temp;
+	int i,j,n,a,b;
+	scanf("%d",&n);
+	head=NULL;
+	for(i=0;i<n;i++){
+		scanf("%d",&a);
+		L=(struct node*)malloc(sizeof(node));
+		L->data=a;
+		L->next=NULL;
+		if(head==NULL){
+		   head=L;
+		} 
+		else{
+		   temp->next=L;
+		}
+		temp=L;
+	}
+	q=head;
+	return q;
+}
+int main(){
+	  node *L1,*L2,*a,*b,*c,*w,*p,*r;
+	  p=(struct node*)malloc(sizeof(node));
+	  a=crealist(L1);
+	  b=crealist(L2);
+	  p->next=NULL;	 
+	  r=w=p; 
+	  while(a&&b){
+	  	if(a->data<=b->data){
+	  	    p->next=a;
+	  	    p=a;
+	  	    a=a->next;
+		  }
+		else{
+			p->next=b;
+			p=b;
+			b=b->next;
+		}
+	}
+	   if(a){
+			p->next=a;
+	   }
+	   if(b){
+	   	    p->next=b;
+	   }
+	   while(w){
+	   	if(w->next->data==w->next->next->data){
+	   		w=w->next;
+		   }
+	   	printf("%d ",w->next->data);
+	   	w=w->next;
+	   }
+}
