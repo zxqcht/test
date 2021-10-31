@@ -1,0 +1,130 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <string.h>
+
+typedef struct car{
+    int a;//1为到达，2为离开
+    int timein;
+    int timeout;
+    char plate[7];
+}car;
+
+typedef struct stack1{
+    int carnum[6];
+    int top;
+    car stops[6];//停放车辆
+}stack1;
+
+typedef struct stack2{
+    car letout[100];
+    int top;
+}stack2;
+
+typedef struct node{
+    int data;
+    struct node* next;
+}node;
+
+typedef struct queue{
+    node *front,*rear;
+    car stopq[10];
+}queue;
+
+char c[7],d[7];
+stack1 s1;
+stack2 s2;
+
+void menu()//输入三个数据项中的第一个：汽车到达或离去的信息.
+{
+    printf("*******************************************\n");
+	printf("****  当前停车场有%d辆车,便道有%d辆车  ****\n");
+	printf("*******************************************\n");
+	printf("************  1.停车    2.驶出  ***********\n");
+	printf("*******************************************\n");
+    printf("************  3.状况    0.退出  ***********\n");
+	printf("*******************************************\n");
+
+}
+
+void stopque();
+
+//停车,停车场是否满.....三个数据项的另外两个(汽车拍照号码,汽车到达的时间)我都在停车函数中实现,
+void in(){
+    printf("请输入您的车牌号:\n");
+    scanf("%s",&c);
+    if(s1.top>=5){
+        printf("停车场已满,驶入便道\n");
+        stopque();
+    }
+    else{
+        s1.top++;
+        printf("请输入汽车到达的时间:（格式如下:202003031530）\n");
+        scanf("%d",&s1.stops[s1.top].timein);
+        strcpy(s1.stops[s1.top].plate,c);
+        printf("%s车辆已停入停车场\n",c);
+    }
+}
+
+void tostack2();
+
+//出库
+void out(){
+    int i;
+    printf("请输入您的车牌号:\n");
+    scanf("%s",&d);
+    if(s1.top<0){
+        printf("停车场无车辆\n");
+    }
+    else if(s1.top>0&&s1.top<6){
+        for(i=0;i<5;i++){
+            if(strcmp(d,s1.stops[i].plate)==0){
+                tostack2();
+            }
+        }
+    }
+    else{
+        printf("无该车辆\n");
+    }
+}
+
+//给出库车让路，并收取出库车费用
+void tostack2(){
+    int a;
+    float b,price=0.05;//一小时三块
+    while(s1.top>=0){
+        if(strcmp(s1.stops[s1.top].plate,d)==0){
+            break;
+        }
+        strcpy(s2.letout[s2.top].plate,s1.stops[s1.top].plate);
+        s2.top=s2.top+1;
+        s1.top=s1.top-1;
+    }
+    printf("牌照为%s的汽车从停车场开走\n",s1.stops[s1.top].plate);
+    printf("请输入离开时间:\n");
+    scanf("%d",&s1.stops[s1.top].timeout);
+    if(s1.stops[s1.top].timeout<s1.stops[s1.top].timein){
+        printf("您输入的时间错误,请重新输入:\n");
+        scanf("%d",&s1.stops[s1.top].timeout);
+    }
+    else{
+        a=s1.stops[s1.top].timeout-s1.stops[s1.top].timein;
+        if(a/100==0&&a>=60){
+            b=price*(a-40);
+        }
+        else{
+            b=price*(a-(a/100)*40);
+        }
+        printf("价格为:%f\n",b);
+    }
+}
+
+
+//停便道,便道是否已满
+void stopque(){
+
+}
+
+int main(){
+
+}
