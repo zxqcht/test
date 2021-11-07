@@ -1,0 +1,265 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct car{
+    int a;//1为到达，2为离开
+    int timein;
+    int timeout;
+    char plate[7];
+}car;
+
+typedef struct stack1{
+    int carnum[6];
+    int top;
+    car stops[6];//停放车辆
+}stack1;
+
+typedef struct stack2{
+    car letout[100];
+    int top;
+}stack2;
+
+typedef struct queue{
+    int data,count;
+    int f,r;
+    struct queue *front,*next,*rear;
+    car stopq[10];
+}queue;
+
+typedef struct outque{//2.
+    car outque[100];
+    int top;
+}outque;
+
+char c[7],d[7],e[7],m[7];//便道出车;
+stack1 s1;
+stack2 s2;
+queue q;
+outque oq;
+
+void menu()//输入三个数据项中的第一个：汽车到达或离去的信息.
+{
+    printf("*******************************************\n");
+	printf("*****  当前停车场有%d辆车,便道有%d辆车  *****\n",s1.top+1,q.count);
+	printf("*******************************************\n");
+	printf("************  1.停车    2.驶出  ***********\n");
+	printf("*******************************************\n");
+    printf("************  3.状况    0.退出  ***********\n");
+	printf("*******************************************\n");
+
+}
+
+void stopque();
+
+//停车,停车场是否满.....三个数据项的另外两个(汽车拍照号码,汽车到达的时间)我都在停车函数中实现,
+void in(){
+    printf("请输入您的车牌号:\n");
+    scanf("%s",&c);
+    if(s1.top>=5){
+        printf("停车场已满,驶入便道\n");
+        stopque();
+    }
+    else{
+        s1.top++;
+        printf("请输入汽车到达的时间:（格式如下:1530）\n");
+        scanf("%d",&s1.stops[s1.top].timein);
+        strcpy(s1.stops[s1.top].plate,c);
+        printf("%s车辆已停入停车场\n\n",c);
+    }
+}
+
+void tostack2();
+
+//出库
+void out(){
+    int i;
+    printf("请输入您的车牌号:\n");
+    scanf("%s",&d);
+    if(s1.top<0){
+        printf("停车场无车辆\n");
+    }
+    else if(s1.top>=0&&s1.top<6){
+        for(i=0;i<6;i++){
+            if(strcmp(d,s1.stops[i].plate)==0){
+                tostack2();
+            }
+        }
+    }
+    else{
+        printf("无该车辆\n");
+    }
+}
+
+//给出库车让路，并收取出库车费用
+void tostack2(){
+    int a;
+    float b,price=0.05;//一小时三块,便宜不,快来我这儿停车
+    while(s1.top>=0){
+        if(strcmp(s1.stops[s1.top].plate,d)==0){
+            break;
+        }
+        strcpy(s2.letout[s2.top].plate,s1.stops[s1.top].plate);
+        s2.top=s2.top+1;
+        printf ("%s车给您让路\n", s1.stops[s1.top].plate);
+        s1.top=s1.top-1;
+    }
+    printf("牌照为%s的汽车从停车场开走\n",s1.stops[s1.top].plate);
+    printf("请输入离开时间:\n");
+    scanf("%d",&s1.stops[s1.top].timeout);
+    if(s1.stops[s1.top].timeout<s1.stops[s1.top].timein){
+        printf("您输入的时间错误,请重新输入:\n");
+        scanf("%d",&s1.stops[s1.top].timeout);
+    }
+    else{
+        a=s1.stops[s1.top].timeout-s1.stops[s1.top].timein;
+        if(a/100==0&&a>=60){
+            b=price*(a-40);
+        }
+        else{
+            b=price*(a-(a/100)*40);
+        }
+        printf("价格为:%f,速速给钱！不然咔嚓了你!\n",b);
+        s1.top=s1.top-1;
+    }
+
+    while(s2.top>=0){
+        s1.top=s1.top+1;
+        s2.top=s2.top-1;
+        strcpy(s1.stops[s1.top].plate,s2.letout[s2.top].plate);
+        printf ("%s车停回停车位\n", s2.letout[s2.top].plate);
+    }
+
+    while(s1.top<5){
+        if(q.data==0){
+            break;
+        }
+        else{
+            s1.top=s1.top+1;
+            strcpy(s1.stops[s1.top].plate,q.stopq[q.f].plate);
+            printf("%s车进入停车场\n",q.stopq[q.f].plate);
+            q.f=q.f+1;
+            q.count=q.count-1;
+        }
+    }
+}
+
+
+//停便道,便道是否已满
+void stopque(){
+    if(q.f==q.r){
+        printf("便道已满!\n");
+    }
+    else{
+        q.count=q.count+1;
+        q.data=q.data+1;
+        strcpy(q.stopq[q.data].plate,c);//写到这我有点迷糊，关于链队列表示有点.......
+        printf("%s车停在便道%d位置\n\n",q.stopq[q.data].plate,q.count);
+    }
+    if(q.count>5){//触发
+        outqueue();
+    }
+}
+
+void situation(){     //  1.实现了一个查询当前费用的功能
+    int i,a,t,c=0;
+    float b,price=0.05;
+    printf("请输入您要查询的车辆:");
+    scanf("%s",&e);
+    for(i=0;i<6;i++){
+        if(strcmp(s1.stops[i].plate,e)==0){
+            printf("请输入当前时间:");
+            scanf("%d",&t);
+            c=c+1;
+            a=t-s1.stops[i].timein;
+            if(a/100==0&&a>=60){
+               b=price*(a-40);
+            }
+            else{
+               b=price*(a-(a/100)*40);
+            }
+            printf("该车当前需要缴纳%f元\n\n",b);
+        }
+    }
+    if(c==0){
+        printf("输入错误!无该车辆！\n\n");
+    }
+}
+
+void outqueue(){//2.实现汽车可以直接从便道开走
+    int a,b,c=0,i,j,x,y;
+    printf("您是否等的花都谢了？\n");
+    printf("1.再等等!   2.*,老子不等了!\n");
+    scanf("%d",&a);
+    if(a==1){
+        return 0;
+    }
+    if(a==2){
+        printf("请输入您的车牌号:\n");
+        scanf("%s",&m);
+        for(i=1;i<10;i++){
+           if(strcmp(q.stopq[i].plate,m)==0){
+                c=c+1;
+                break;
+           }
+        }
+           x=i;
+           for(j=1;j<x;j++){
+              strcpy(oq.outque[oq.top].plate,q.stopq[j].plate);
+              printf("便道%s车已为您让路\n",q.stopq[j].plate);
+              oq.top=oq.top+1;
+            }
+              y=x+1;
+              printf("%s车已开出便道,奔向自由!但你是巨婴吗？为了你,前面的车都白排队了！\n",q.stopq[x].plate);
+              for(i=1;i<q.count-x+1;i++){
+                strcpy(q.stopq[i].plate,q.stopq[y].plate);
+                printf("%s车到达便道%d位置\n",q.stopq[y].plate,i);
+                y=y+1;//后车向前；
+              }
+              for(b=1;b<x;b++){
+                oq.top=oq.top-1;
+              }
+              for(j=i;j<i+x-1;j++){
+                strcpy(q.stopq[j].plate,oq.outque[oq.top].plate);
+                printf("%s车进入便道%d位置\n",oq.outque[oq.top].plate,j);
+                oq.top=oq.top+1;
+              }
+        q.count=q.count-1;
+        if(c==0){
+           printf("输入错误!无该车辆！\n\n");
+        }
+    }
+
+}
+
+int main(){
+    int z,x;
+    s1.top=-1;
+    s2.top=-1;
+    q.data=0;
+    q.count=0;
+    q.f=1;
+    q.r=10;
+    oq.top=1;
+    do{
+        menu();
+        scanf("%d",&z);
+        switch(z){
+        case 1:
+            in();
+            break;
+        case 2:
+            out();
+            break;
+        case 3:
+            situation();
+            break;
+        case 0:
+            printf("退出\n");
+            break;
+        default:
+		    printf("选择错误,请重新选择:\n");
+		    break;
+		}
+    }while(z);
+}
