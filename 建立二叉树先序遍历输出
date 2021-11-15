@@ -1,0 +1,55 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct node{
+    char data;
+    struct node *lchild,*rchild;
+}node;
+
+node* create(){
+    node *T;
+    char c;
+    scanf("%c",&c);
+    if(c=='0'){
+        T=NULL;
+    }
+    else{
+        T=(node*)malloc(sizeof(node));
+        T->data=c;
+        T->lchild=create();
+        T->rchild=create();
+    }
+    return T;
+}
+
+print(node *T){
+    if(T){
+        printf("%c ",T->data);
+        print(T->lchild);
+        print(T->rchild);
+    }
+}
+
+node* parent(char x,node *r){
+    node *p;
+    if(r==NULL)
+        return NULL;
+    if(r->lchild->data==x||r->rchild->data==x){
+        printf("%c ",r->data);
+        return r;
+    }
+    p=parent(x,r->lchild);
+    if(p!=NULL){
+        return p;
+    }
+    else{
+        return(parent(x,r->rchild));
+    }
+}
+
+int main(){
+    node *M;
+    char a;
+    M=create();
+    print(M);
+}
