@@ -1,0 +1,8 @@
+#include <stdlib.h>
+
+int main()
+{
+   int system(const char *cmdline /* 命令字符串 */);
+   system("C:\\Users\\陈昊天\\PycharmProjects\\pythonProject4\\main.py");
+}
+
