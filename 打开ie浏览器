@@ -1,0 +1,5 @@
+#include<stdlib.h>
+void main() {
+    system("\"C:\\Program Files\\Internet Explorer\\iexplore.exe\" ");
+    system("pause");
+}
