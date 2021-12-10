@@ -1,0 +1,30 @@
+#include <stdio.h>
+#include <string.h>
+void sum(int n)
+{
+	printf("%d\n",n);
+}
+int main()
+{
+	char a[30];
+	int i,b=0,c=0,d=0;
+	scanf("%s",&a); 
+	sum(strlen(a));
+	for(i=0;i<strlen(a);i++)
+	{
+		if(a[i]>='A'&&a[i]<='Z')
+		b++;
+	}
+	for(i=0;i<strlen(a);i++)
+	{
+		if(a[i]>='a'&&a[i]<='z')
+		c++;
+	}
+	for(i=0;i<strlen(a);i++)
+	{
+		if(a[i]>=48&&a[i]<=57)
+		d++;
+	}
+	printf("%d\n%d\n%d",b,c,d);
+	
+} 
