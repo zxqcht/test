@@ -1,0 +1,78 @@
+#include <stdio.h>
+#include <stdlib.h>
+typedef struct node{
+	int data;
+	struct node *next;
+}node;
+node* crealist(){
+	node *head,*q,*temp,*L;
+	int i,j,n,a,b;
+	scanf("%d",&n);
+	head=NULL;
+	for(i=0;i<n;i++){
+		scanf("%d",&a);
+		L=(struct node*)malloc(sizeof(node));
+		L->data=a;
+		L->next=NULL;
+		if(head==NULL){
+		   head=L;
+		}
+		else{
+		   temp->next=L;
+		}
+		temp=L;
+	}
+	q=head;
+	return q;
+}
+int main(){
+	  node *L1,*L2,*a,*b,*c,*w,*p,*r,*z,*x,*v;
+	  p=(struct node*)malloc(sizeof(node));
+	  a=crealist();
+	  c=b=crealist();
+	  p->next=NULL;
+	  w=p;
+	  while(a){
+	  	if(a->data==b->data){
+	  	    p->next=a;
+	  	    p=a;
+	  	    a=a->next;
+		  }
+        else{
+            b=b->next;
+        }
+        if(b==NULL){
+            b=c;
+            a=a->next;
+        }
+	}
+      if(w->next==NULL){
+        printf("0");
+      }
+      v=w;
+      while(w->next!=NULL){
+           r=w->next;
+           z=w;
+           while(r!=NULL){
+            if(w->data==r->data){
+                r=r->next;
+                z->next=r;
+            }
+            else{
+                r=r->next;
+                z=z->next;
+            }
+           }
+           if(w->next==NULL){
+            break;
+           }
+           else{
+            w=w->next;
+           }
+        }
+        while(v->next){
+          printf("%d ",v->next->data);
+          v=v->next;
+      }
+	   return 0;
+}
