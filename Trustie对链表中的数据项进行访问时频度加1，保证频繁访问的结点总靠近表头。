@@ -1,0 +1,96 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define max 10
+typedef struct lnode
+{
+    int data;
+    struct lnode *next;
+    struct lnode *prior;
+    int freq;
+} pnode, *DLinklist;
+ 
+pnode *creatnode(int data)
+{
+    pnode* node = (pnode*)malloc(sizeof(pnode));
+    node->data = data;
+    node->prior = node->next = NULL;
+    node->freq = 0;
+    return node;
+}
+pnode *insert(DLinklist *s, int data) 
+{
+    pnode *node = creatnode(data);
+    pnode *p;
+    p = (*s);
+    while(p->next != NULL)
+    {
+        p = p->next;
+    }
+    p->next = node;
+    node->prior = p;
+    node->next = NULL;
+    return *s;
+}
+void Locate(DLinklist *s, int data)
+{
+    pnode *p, *q;
+    p = (*s)->next;
+  	q=(*s);
+    while(p && p->data != data)
+    {
+        q = p;
+        p = p->next;
+    }
+    p->freq++;
+    while(q != *s && q->freq < p->freq)
+    {
+        q = q->prior;
+    }
+    p->prior->next = p->next; 
+    if(p->next != NULL)
+        p->next->prior = p->prior;
+    p->next = q->next;
+    if(q->next != NULL)
+    {
+        q->next->prior = p;
+        q->next = p;
+        p->prior = q;
+    }
+}
+int main()
+{
+    pnode *node;
+    node = (pnode*)malloc(sizeof(pnode));
+    node->prior = node->next = NULL;
+    int x, num, i = 0, locatecout;
+    int arr[max];
+    scanf("%d", &num);
+    while(i < num)
+    {
+        scanf("%d", &x);
+        node = insert(&node, x);
+        i++;
+    }
+    pnode* p = node->next;
+    while(p != NULL)
+    {
+        printf("%d%c", p->data, (p->next != NULL)?' ':'\n');
+        p = p->next;
+    }
+    scanf("%d", &locatecout);
+    for(i = 0; i < locatecout; i++)
+    {
+        scanf("%d", &arr[i]);
+    }
+    for(i = 0; i < locatecout; i++)
+    {
+        Locate(&node, arr[i]);
+        pnode* p = node->next;
+        while(p != NULL)
+        {
+            printf("%d%c", p->data, (p->next != NULL)?' ':'\n');
+            p = p->next;
+        }
+    }
+    return 0;
+}
