@@ -1,0 +1,115 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include <math.h>
+#define maxsize 100
+typedef struct bitnode
+{
+	int data;
+	char node;
+	struct bitnode *lchild,*rchild;
+ }Bitnode,*Bitree;
+ Bitree initdata()
+ {
+ 	Bitree bt;
+ 	int data;
+ 	scanf("%d",&data);
+ 	if(data==0)
+ 	{
+ 		bt=NULL;
+	 }
+	else
+	{
+		bt=(Bitnode*)malloc(sizeof(Bitnode));
+		bt->data=data;
+		bt->lchild=initdata();
+		bt->rchild=initdata();
+	}
+	return bt;
+ }
+ Bitree initnode()
+ {
+ 	Bitree bt;
+ 	char node;
+ 	scanf("%c",&node);
+ 	if(node=='0')
+ 	{
+ 		bt=NULL;
+	 }
+	else
+	{
+		bt=(Bitnode*)malloc(sizeof(Bitnode));
+		bt->node=node;
+		bt->lchild=initnode();
+		bt->rchild=initnode();
+	}
+	return bt;
+ }
+ void LevelOrder(Bitree bt)
+ {
+ 	Bitnode *queue[maxsize];
+ 	int front,rear,i=0,m;
+ 	if(bt==NULL)
+ 	{
+ 		return ;
+	 }
+	 front=-1;
+	 rear=0;
+	 int data[maxsize];
+	 int weight[maxsize];
+	 queue[rear]=bt;
+	 data[i]=queue[rear]->data;
+	 while(front!=rear)
+	 {
+	 	front++;
+	 	if(queue[front]->lchild!=NULL)
+	 	{
+	 		rear++;
+	 		queue[rear]=queue[front]->lchild;
+	 		data[++i]=queue[rear]->data;
+		 }
+		 else
+		 {
+		 	data[++i]=0;
+		 }
+		if(queue[front]->rchild!=NULL)
+		{
+			rear++;
+			queue[rear]=queue[front]->rchild;
+			data[++i]=queue[rear]->data;
+		}
+		else
+		{
+			data[++i]=0;
+		}
+	 }
+	 int n=i+1,k=1,j=0;
+	 for(i=0;i<n;i++)
+	 {
+	 	if(i==k-1)
+	 	{
+	 		weight[++j]=0;
+	 		k=pow(2,j);
+		 }
+		 weight[j]+=data[i];
+	}
+	m=j;
+	int max=0;
+	int l;
+	for(i=0;i<=m;i++)
+	{
+		if(max<weight[i])
+		{
+			l=i;
+		    max=weight[i];
+		}
+	}
+	printf("%d\n",l);
+	printf("%d\n",max);
+  }
+int main()
+{
+	Bitree bt;
+	bt=initnode();
+	bt=initdata();
+	LevelOrder(bt);
+}
