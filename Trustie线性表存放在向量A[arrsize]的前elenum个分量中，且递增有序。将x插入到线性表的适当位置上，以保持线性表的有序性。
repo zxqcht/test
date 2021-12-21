@@ -1,0 +1,22 @@
+#include <stdio.h>
+#include <string.h>
+int main(){
+	int arrsize,elenum,x,h,t,i,a[100];
+	scanf("%d",&arrsize);
+	for(i=0;i<arrsize;i++){
+		scanf("%d",&a[i]);
+	}
+	scanf("%d",&elenum);
+	scanf("%d",&x);
+	for(i=0;i<elenum;i++){
+		if(a[i]>=x){
+			h=i;break;
+		}
+	}
+	for(i=arrsize;i>=h;i--){
+		a[i+1]=a[i];
+	}
+	a[h]=x;
+	for(i=0;i<arrsize+1;i++)
+	printf("%d ",a[i]);
+} 
