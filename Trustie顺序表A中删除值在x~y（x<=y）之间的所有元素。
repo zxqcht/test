@@ -1,0 +1,25 @@
+#include <stdio.h>
+int main(){
+	int a[1000],i,j,x,y,n,c,d;
+	scanf("%d",&n);
+	for(i=0;i<n;i++){
+		scanf("%d",&a[i]);
+	}
+	scanf("%d",&x);
+	scanf("%d",&y);
+	if(x>y)
+	  return -1;
+	if(x<=y){
+		c=y-x+1;
+		while(c)
+		{
+		  for(i=x-1;i<y;i++){
+			a[i]=a[i+1];
+		   }
+		c=c-1;
+		}
+	}
+	for(i=0;i<n-(y-x+1);i++){
+		printf("%d ",a[i]);
+	}
+} 
