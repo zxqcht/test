@@ -1,0 +1,123 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#define MAX 100
+
+typedef struct tree
+{
+    char data;
+    struct tree *lchild , *rchild;
+} BinNode,*BiTree;
+
+BiTree restore(char* zhong, char *hou, int length)
+{
+    if(length == 0)
+    {
+        return NULL;
+    }
+    BiTree node;
+    node = (BinNode *)malloc(sizeof(BinNode));
+    node->data= *(hou+length-1);
+    int rootIndex = 0;
+    for(;rootIndex < length; rootIndex++)
+    {
+        if(zhong[rootIndex] == *(hou+length-1))
+            break;
+    }
+    node->lchild = restore(zhong, hou , rootIndex);
+    node->rchild = restore(zhong + rootIndex + 1, hou + rootIndex , length - (rootIndex + 1));
+
+    return node;
+}
+int Height_tree(BiTree T)
+{
+    int r,l;
+    if (T == NULL){
+        return 0;
+    }
+    l = Height_tree(T->lchild);
+    r = Height_tree(T->rchild);
+    return l>=r?l+1:r+1;
+}
+
+void Levelorder(BiTree T, BinNode *queue[],char c[],int height)
+{
+    BinNode *p;
+    int front,rear;
+    int i =1;
+    if(T == NULL){
+            return;
+
+    }
+    rear = 0;
+    front = -1;
+    queue[rear] = T;
+    c[1] = T->data;
+    while(front != rear){
+        front++;
+        if(queue[front]==NULL)
+         {
+             c[++i]='0';
+             c[++i]='0';
+             rear++;
+             queue[rear]=NULL;
+             rear++;
+             queue[rear]=NULL;
+             continue;
+         }
+         if(i>=pow(2,height)) break;
+         i++;
+         if(queue[front]->lchild!=NULL){
+            rear++;
+            queue[rear] = queue[front]->lchild;
+            c[i] = queue[rear]->data;
+        }
+        else{
+             c[i] = '0';
+             rear++;
+             queue[rear]=NULL;
+        }
+        i++;
+        if(queue[front]->rchild!=NULL){
+            rear++;
+            queue[rear] = queue[front]->rchild;
+            c[i]  =queue[rear]->data;
+        }
+        else{
+          c[i] = '0';
+          rear++;
+          queue[rear]=NULL;
+        }
+    }
+    for(i = 1;i<pow(2,height);i++)
+       printf("%c",c[i]);
+}
+
+
+int main()
+{
+    char backstring[MAX],midstring[MAX];
+    BiTree T;
+    BiTree p;
+    char c[MAX];
+    BinNode *queue[MAX];
+    int length;
+    int i=0,j=0;
+    scanf(" %c",&backstring[i]);
+    while(backstring[i]!='#')
+    {
+        i++;
+        scanf(" %c",&backstring[i]);
+    }
+    scanf(" %c",&midstring[j]);
+    while(midstring[j]!='#')
+    {
+        j++;
+        scanf(" %c",&midstring[j]);
+    }
+    T= restore(midstring,backstring,j);
+    p = T;
+    length = Height_tree(p);
+    Levelorder(p,queue,c,length);
+    return 0;
+}
